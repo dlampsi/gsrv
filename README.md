@@ -1,6 +1,8 @@
 # gsrv
 
-Go module with HTTP and GRPC servers. Servers gracefully shut down when root context is cancelled.
+[![Go Reference](https://pkg.go.dev/badge/github.com/dlampsi/gsrv.svg)](https://pkg.go.dev/github.com/dlampsi/gsrv)
+
+A useful wrapper for starting and maintaining HTTP and gRPC servers with graceful shutdown on the root context cancel.
 
 ## Usage
 
@@ -22,11 +24,11 @@ var (
 )
 
 func main() {
-    // Root context
-    ctx, cancel := context.WithCancel(context.Background())
-    defer cancel()
+	// Root context
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
-    // Listening for OS interupt signals
+	// Listening for OS interupt signals
 	terminateCh := make(chan os.Signal, 1)
 	signal.Notify(terminateCh, syscall.SIGINT, syscall.SIGTERM)
 	go func() {
@@ -37,19 +39,23 @@ func main() {
 		}
 	}()
 
-    srv, err := gsrv.New(
-        "0.0.0.0:8080", 
-        gsrv.WithTimeout(shutdownTimeout),
-    )
-    if err != nil {
-        // Process the error 
-    }
+	// GSRV server
+	srv, err := gsrv.New(
+		"0.0.0.0:8080", 
+		gsrv.WithTimeout(shutdownTimeout),
+	)
+	if err != nil {
+		// Process the error 
+	}
 
-    // Here comes your custom HTTP handler (router) which can be any framework (like gin or gorilla)
-    handler := CreateYourCustomHttpHandler()
+	/*
+		Here comes your custom HTTP handler (router) 
+		which can be any framework (like gin or gorilla)
+	*/
+	handler := CreateYourCustomHttpHandler()
 
-    // This will block until the provided context is closed.
-    err = srv.ServeHTTP(ctx, handler)
+	// This will block until the provided context is closed.
+	err = srv.ServeHTTP(ctx, handler)
 	cancel()
 	if err != nil {
 		// Process the error 
