@@ -1,4 +1,4 @@
-# gsvc
+# gsrv
 
 Go module with HTTP and GRPC servers. Servers gracefully shut down when root context is cancelled.
 

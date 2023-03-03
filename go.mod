@@ -1,4 +1,4 @@
-module github.com/dlampsi/gsvc
+module github.com/dlampsi/gsrv
 
 go 1.19
 
