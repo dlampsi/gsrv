@@ -62,3 +62,19 @@ func main() {
 	}
 }
 ```
+
+### Custom logger
+
+The module provides a [Logger](server.go#L63) interface that you can implement and use for your gsrv server.
+
+For example, [zap logger](https://github.com/uber-go/zap) already satisfies this interface:
+
+```go
+logger, _ := zap.NewProduction()
+defer logger.Sync()
+
+srv, err := gsrv.New("0.0.0.0:8080", gsrv.WithLogger(logger))
+if err != nil {
+	// Process the error 
+}
+```
